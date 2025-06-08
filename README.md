@@ -1,132 +1,181 @@
-# FocusShieldFront
-Bouclier de concentration
-Très bien, voici le README mis à jour, incluant une section pour prévisualiser l’historique des sites bloqués directement depuis la console. Je t’indique le code à copier-coller ainsi qu’une explication claire de son utilité.
+# ✅ Plan de test fonctionnel – Extension Chrome *FocusShield*
 
-⸻
+Vérification fonctionnelle côté **front** pour s'assurer que l'extension respecte bien le cahier des charges.
 
-📕 FocusShield – Blocage de Sites Distrayants
+---
 
-🧪 Tester le Blocage de Sites via background.js
+## 📌 Cahier des charges (résumé)
 
-Cette section te guide pour tester manuellement la logique de blocage d’un site comme YouTube.
+Fonctionnalités attendues côté **extension (front uniquement)** :
 
-⸻
+1. 🕵️‍♂️ Masquage intelligent de sélecteurs sur **YouTube**, **LinkedIn**, **TikTok**
+2. 🔘 Activation/désactivation du blocage via un **popup**
+3. 🕒 Mode pause avec **plage horaire (début/fin)**
+4. 🛠️ Personnalisation des sélecteurs via **options.html**
+5. 📈 Statistiques d’utilisation (**heures sans distraction**)
+6. 📜 Historique des sites bloqués
+7. 🧹 Bouton **Reset / Debug** pour les devs/testeurs
 
-✅ Pré-requis
-•	Google Chrome ou Chromium (version récente)
-•	Le code complet de l’extension (manifest.json, background.js, etc.)
-•	Fichier blocked.html présent dans ton projet
-•	Le dossier de l’extension bien organisé :
+---
 
-FocusShieldFront/
-├── background.js
-├── blocked.html
-├── content.js
-├── icons/
-│   └── icon48.png ...
-├── manifest.json
-├── options.html
-├── popup.html
-└── libs/
-└── chart.js
+## 🧰 Prérequis pour tester l’extension
 
+Avant de lancer les tests, assure-toi d’avoir :
 
-⸻
+- ✅ **Google Chrome** ou **Chromium** (version récente recommandée)
+- ✅ Le **code complet de l’extension**, incluant :
+    - `manifest.json`
+    - `background.js`
+    - `content.js`
+    - `popup.html`
+    - `options.html`
+    - `blocked.html`
+- ✅ Le fichier `blocked.html` présent à la racine du projet (utilisé pour les redirections en cas de blocage)
+- ✅ Un dossier de projet bien structuré comme suit :
 
-🚀 Charger l’extension
-1.	Ouvre Chrome.
-2.	Va à chrome://extensions.
-3.	Active Mode développeur (coin haut droit).
-4.	Clique sur Charger l’extension non empaquetée.
-5.	Sélectionne le dossier FocusShield/.
+---
 
-⸻
+## 🔍 Étapes de test
 
-🔎 Bloquer un site (ex. YouTube)
+### 1. 🚀 Chargement de l’extension
 
-Étape 1 : Ouvrir la console
-1.	Dans chrome://extensions, repère FocusShield.
-2.	Clique sur “Service worker” dans la section de l’extension pour ouvrir sa console.
+- Aller dans `chrome://extensions/`
+- Activer **Mode développeur**
+- Cliquer sur **Charger l’extension non empaquetée**
+- Sélectionner le dossier contenant `manifest.json`
 
-⸻
+**✅ Résultat attendu** : L’icône de FocusShield s’affiche dans la barre des extensions
 
-Étape 2 : Ajouter un site à bloquer
+---
 
-Dans la console, tape :
+### 2. 🧘 Test de la popup (`popup.html`)
 
-chrome.runtime.sendMessage({
-type: "blockSite",
-url: "https://www.youtube.com"
+Cliquer sur l’icône de l’extension :
+
+| Élément à tester                          | Résultat attendu                      |
+|------------------------------------------|----------------------------------------|
+| 🧘 FocusShield s’affiche                   | ✅ Oui                                  |
+| ✅ Activer le blocage                     | Fonctionnelle, sauvegarde OK           |
+| 🕒 Mode pause                             | Fonctionnel                            |
+| ⚙️ Bouton **Options**                     | Ouvre bien `options.html`              |
+| 🔍 Bouton **Debug**                       | Affiche `chrome.storage`               |
+| 🧹 Bouton **Reset**                       | Réinitialise les paramètres            |
+| 🔄 Statut affiché                         | Visuel en bas de popup                 |
+
+---
+
+### 3. ⚙️ Page des options (`options.html`)
+
+Accès : via le bouton dans la popup ou `chrome-extension://[ID]/options.html`
+
+| Élément                                  | Résultat attendu                        |
+|------------------------------------------|------------------------------------------|
+| ✍️ Saisie de sélecteurs perso             | ✅ Fonctionnelle                         |
+| 💾 Sauvegarde des sélecteurs              | ✅ Enregistrés dans `chrome.storage`     |
+| 🕒 Horaires de pause (input `time`)       | ✅ Enregistrés et utilisés correctement |
+| 📊 Statistiques (Chart.js)                | ✅ Graphique affiché                     |
+| ♻️ Bouton Réinitialiser les stats         | ✅ Fonctionnel                           |
+| 📜 Historique des sites bloqués          | ✅ Affichage des URLs/dates              |
+
+---
+
+### 4. 🎯 Content script (`content.js`)
+
+À tester sur les vrais sites (**YouTube, LinkedIn, TikTok**)
+
+| Test à effectuer                                       | Résultat attendu                         |
+|--------------------------------------------------------|-------------------------------------------|
+| Blocage activé → sélecteurs masqués (`display: none`) | ✅ Fonctionnel                            |
+| Plage horaire → contenu non bloqué                     | ✅ Fonctionnel                            |
+| Historique mis à jour (site visité)                   | ✅ Ajout dans `chrome.storage`            |
+| Console développeur                                    | ✅ Pas d’erreurs JavaScript               |
+
+---
+
+## 🧪 Aide au test : données de test
+
+Tu peux injecter des données de test :
+
+```js
+const today = new Date().toISOString().split('T')[0];
+const testStats = {
+  distractionFreeSeconds: 3600,
+  blockedSites: [
+    { site: "facebook.com", time: Date.now() },
+    { site: "youtube.com", time: Date.now() }
+  ]
+};
+chrome.storage.local.get({ dailyStats: {} }, (data) => {
+  data.dailyStats[today] = testStats;
+  chrome.storage.local.set({ dailyStats: data.dailyStats }, () => {
+    console.log('✅ Données de test enregistrées');
+  });
 });
+```
 
-Tu devrais voir :
+### 🔍 Debug tools
 
-✅ www.youtube.com ajouté à la liste bloquée
-🚫 Règle DNR ajoutée pour www.youtube.com
+- Voir le contenu du `chrome.storage` :
+  ```js
+  chrome.storage.local.get(null, (data) => console.log(data));
+  ```
 
-⸻
+- Accéder à la console de logs du background :
+    1. `chrome://extensions/`
+    2. FocusShield → **Service Worker** → Inspecter
 
-Étape 3 : Tester le blocage
-1.	Ouvre un nouvel onglet.
-2.	Va sur https://www.youtube.com.
+---
 
-✅ Tu seras redirigé vers blocked.html, signe que le site est bien bloqué.
+## 📋 Suivi visuel rapide
 
-⸻
+| Fonction                     | Implémentée ✅ | Testée 🔲 | Fonctionnelle 🔲 |
+|-----------------------------|----------------|-----------|------------------|
+| Popup : Activation blocage  | ✅              | 🔲        | 🔲               |
+| Popup : Mode pause          | ✅              | 🔲        | 🔲               |
+| Popup : Debug / Reset       | ✅              | 🔲        | 🔲               |
+| Options : Sélecteurs perso  | ✅              | 🔲        | 🔲               |
+| Options : Horaires pause    | ✅              | 🔲        | 🔲               |
+| Statistiques d’utilisation  | ✅              | 🔲        | 🔲               |
+| Historique des blocages     | ✅              | 🔲        | 🔲               |
+| Masquage sur sites ciblés   | ✅              | 🔲        | 🔲               |
 
-⏸️ Activer le mode pause
+---
 
-Permet de désactiver temporairement le blocage (par exemple pour 1 minute) :
+## 🔐 Content Security Policy (CSP)
 
-chrome.runtime.sendMessage({
-type: "activatePauseMode",
-duration: 1
-});
+### ✅ Exemple recommandé dans `manifest.json`
 
-⸻
-
-📊 Voir l’historique des sites bloqués
-
-👉 À quoi ça sert ?
-
-Cette commande permet de voir tous les sites bloqués (avec les dates) dans le stockage local. Très utile pour vérifier si un site a été bien bloqué et quand.
-
-💻 Commande à coller dans la console :
-
-chrome.runtime.sendMessage({ type: "debug" }, (data) => {
-console.log("🧠 Historique des sites bloqués :", data.localStorage.blockedSites);
-console.log("📆 Statistiques journalières :", data.localStorage.dailyStats);
-});
-
-✨ Résultat attendu :
-•	Une liste d’objets comme :
-
-[
-{ url: "https://www.youtube.com", date: "2025-06-02T14:22:10.000Z" },
-...
-]
-
-	•	Et les stats du jour :
-
-{
-"2025-06-02": {
-distractionFreeSeconds: 300,
-blockedSites: [
-{ site: "www.youtube.com", time: "2025-06-02T14:22:10.000Z" }
-]
+```json
+"content_security_policy" : {
+  "extension_pages": "script-src 'self'; object-src 'self';"
 }
-}
+```
 
+Cela permet :
+- L’exécution des scripts locaux (`'self'`)
+- **Sans** `unsafe-inline`, donc sécurisé et conforme aux bonnes pratiques
 
-⸻
+### ⚠️ Ne pas faire (sauf test local) :
 
-❓ Dépannage
-•	🌀 Site pas bloqué ?
-•	Recharge l’extension
-•	Vérifie que l’URL a bien le bon format (avec https://)
-•	🔐 Erreur de permission ?
-•	Assure-toi que permissions dans manifest.json contient declarativeNetRequest, storage, etc.
+```json
+"extension_pages": "script-src 'self' 'unsafe-inline'; object-src 'self';"
+```
 
-⸻
+---
 
-N’hésite pas à demander un dashboard visuel, une page d’options, ou encore un système de notification si tu veux aller plus loin ! 🚀
+## ✅ Bonnes pratiques
+
+| Élément                  | Recommandation                        |
+|--------------------------|----------------------------------------|
+| Attributs `onclick`, etc | ❌ À éviter (pas inline JS)            |
+| Scripts JS               | ✅ Externes, via `addEventListener`    |
+| CSP                      | ✅ Doit être sécurisé (`'self'`)       |
+| Chart.js                 | ✅ Compatible via `<script src="...">` |
+
+---
+
+## 👉 Prochaine étape
+
+- Un script de test automatique pour `chrome.storage` ?
+
+---
