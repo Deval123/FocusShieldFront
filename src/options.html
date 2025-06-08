@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>FocusShield – Options</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    h2, h3 {
+      margin-top: 40px;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 5px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="time"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-weight: bold;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .status {
+      margin-top: 10px;
+      color: green;
+      font-weight: bold;
+    }
+
+    #statsContainer {
+      margin-top: 20px;
+    }
+
+    canvas {
+      margin-top: 20px;
+      display: block;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+<h1>🎯 FocusShield – Options</h1>
+
+<!-- Bloc Sélecteurs personnalisés -->
+<section>
+  <h1>🔧  Paramètres</h1>
+
+  <h2>1. Sélecteurs personnalisés</h2>
+
+  <label for="youtube">À masquer sur YouTube :</label>
+  <input type="text" id="youtube" aria-label="Sélecteurs YouTube à masquer" placeholder="#related, .ytd-watch-next-secondary-results-renderer" />
+
+  <label for="linkedin">À masquer sur LinkedIn :</label>
+  <input type="text" id="linkedin" placeholder=".scaffold-finite-scroll" />
+
+  <button id="save">💾 Sauvegarder</button>
+  <div class="status" id="status"></div>
+</section>
+
+<!-- Bloc Plages horaires -->
+<section>
+  <h2>2. Horaires de pause automatique</h2>
+  <label for="pauseStartTime">Début :</label>
+  <input type="time" id="pauseStartTime" />
+
+  <label for="pauseEndTime">Fin :</label>
+  <input type="time" id="pauseEndTime" />
+
+  <button id="savePauseTimesBtn">💾 Enregistrer les horaires</button>
+</section>
+
+<!-- Bloc Statistiques -->
+<section>
+  <h2>3. Statistiques (7 derniers jours)</h2>
+  <div id="statsContainer">Chargement des statistiques...</div>
+  <canvas id="statsChart" width="400" height="200"></canvas>
+  <button id="resetStatsBtn">♻️ Réinitialiser les statistiques</button>
+</section>
+
+<hr/>
+
+<h2>4. Historique des sites bloqués</h2>
+<button id="afficherHistoriqueBtn">📜 Afficher l'historique</button>
+<ul id="blockedSitesHistory"></ul>
+
+
+<script src="./libs/chart.js"></script>
+
+<!-- Script externe obligatoire pour éviter CSP violations -->
+<script src="./options.js"></script>
+</body>
+</html>

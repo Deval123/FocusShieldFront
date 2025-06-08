@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accès bloqué – FocusShield</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f9fb;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 600px;
+      padding: 2rem;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+      background-color: #ffffff;
+      border-radius: 1rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #dc3545;
+    }
+
+    p {
+      margin: 1rem 0;
+      font-size: 1.1rem;
+    }
+
+    .tip {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .logo {
+      width: 64px;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0b5ed7;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <img src="./icons/icon128.png" alt="FocusShield logo" class="logo" />
+  <h1>Site bloqué 🚫</h1>
+  <p>Ce site est identifié comme source de distraction.</p>
+  <p><strong>FocusShield</strong> vous aide à rester concentré(e) 💡.</p>
+
+  <button id="pauseBtn">Désactiver temporairement (5 min)</button>
+
+  <div class="tip">
+    Vous pouvez gérer vos sites bloqués dans les options de l'extension.
+  </div>
+</div>
+
+<script>
+  document.getElementById('pauseBtn').addEventListener('click', () => {
+    chrome.runtime.sendMessage({ type: 'activatePauseMode', duration: 5 });
+    window.close(); // Ferme la page bloquée
+  });
+</script>
+</body>
+</html>

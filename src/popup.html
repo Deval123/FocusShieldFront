@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>FocusShield - Popup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 15px;
+      width: 250px;
+    }
+
+    h1 {
+      font-size: 1.3em;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      margin-top: 15px;
+      font-size: 1em;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 8px 12px;
+      font-weight: bold;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 0.95em;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<h1>🧘 FocusShield</h1>
+
+<label>
+  <input type="checkbox" id="toggleBlocking">
+  Activer le blocage
+</label>
+
+<label>
+  <input type="checkbox" id="pauseMode">
+  Mode pause
+</label>
+
+<button id="openOptions">⚙️ Options</button>
+<hr />
+<button id="debugBtn">🔍 Debug</button>
+<button id="resetBtn" style="margin-top: 10px;">🧹 Reset</button>
+<pre id="debugOutput" style="white-space: pre-wrap; margin-top: 10px; background: #f9f9f9; padding: 10px; border-radius: 5px; font-size: 12px;"></pre>
+<div class="status" id="statusText"></div>
+<button id="testBlock">Tester blocage</button>
+<script src="popup.js"></script>
+</body>
+</html>
